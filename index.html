@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shreeji Finance</title>
+<meta name="theme-color" content="#1D3A8F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Shreeji Finance">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F6FA;--sheet:#FFFFFF;--text:#1F2430;--muted:#5E6778;--rule:#DDE3EE;
+  --ink:#1D3A8F;--ink-2:#2E4FB8;--ink-soft:#E9EEFA;
+  --red:#B42318;--red-soft:#FCEBE9;--green:#17683E;--green-soft:#E4F3EA;--amber:#8A5A00;--amber-soft:#FFF3D6;
+  --font:"Hind Vadodara",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --nav-h:62px;--r:14px;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#11141B;--sheet:#1A1F29;--text:#E8EBF2;--muted:#9AA3B5;--rule:#2C3342;
+  --ink:#8FA8F5;--ink-2:#A9BCF8;--ink-soft:#232C44;
+  --red:#F2877D;--red-soft:#3A1F1E;--green:#6FCF97;--green-soft:#173024;--amber:#F2C46D;--amber-soft:#3A2E14;}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+a{color:var(--ink)}
+header.top{position:sticky;top:0;z-index:5;background:var(--paper);padding:calc(env(safe-area-inset-top) + 10px) 16px 8px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--rule)}
+header.top h1{font-size:19px;margin:0;font-weight:700;flex:1;letter-spacing:.2px}
+header.top .sync{font-size:12px;color:var(--muted);border:1px solid var(--rule);border-radius:99px;padding:3px 10px;background:var(--sheet);cursor:pointer}
+main{max-width:980px;margin:0 auto;padding:14px 16px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom))}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--sheet);border-top:1px solid var(--rule);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs a{flex:1;text-align:center;text-decoration:none;color:var(--muted);font-size:12px;padding:8px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:500}
+nav.tabs a svg{width:22px;height:22px}
+nav.tabs a.on{color:var(--ink)}
+@media (min-width:900px){
+  nav.tabs{top:0;bottom:0;right:auto;width:92px;flex-direction:column;border-top:0;border-right:1px solid var(--rule);padding-top:70px}
+  nav.tabs a{flex:0;padding:14px 0}
+  header.top,main{margin-left:92px}
+  main{padding-bottom:40px}
+}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:12px}
+.stat{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:14px 16px}
+.stat .k{font-size:13px;color:var(--muted)}
+.stat .v{font-size:26px;font-weight:700;margin-top:2px}
+.stat .s{font-size:12.5px;color:var(--muted)}
+.stat.main{background:var(--ink);border-color:var(--ink);color:#fff}
+.stat.main .k,.stat.main .s{color:#DCE4FB}
+@media (prefers-color-scheme:dark){.stat.main{background:#233366;border-color:#233366}}
+h2{font-size:17px;margin:18px 0 8px;font-weight:700}
+h3{font-size:15px;margin:0 0 6px}
+.muted{color:var(--muted)}.small{font-size:13px}
+.row{display:flex;align-items:center;gap:10px}
+.sp{flex:1}
+.btn{border:1px solid var(--rule);background:var(--sheet);border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:6px;min-height:42px}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+@media (prefers-color-scheme:dark){.btn.pri{color:#11141B}}
+.btn.red{color:var(--red)}
+.btn.sm{padding:5px 10px;min-height:34px;font-size:14px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.list{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.item{display:flex;gap:10px;padding:11px 14px;border-top:1px solid var(--rule);cursor:pointer;align-items:flex-start}
+.item:first-child{border-top:0}
+.item:hover{background:var(--ink-soft)}
+.item .t{font-weight:600}
+.item .d{font-size:13px;color:var(--muted)}
+.item .a{font-weight:700;text-align:right}
+.in{color:var(--green)}.out{color:var(--red)}
+.day{display:flex;justify-content:space-between;padding:8px 14px;background:var(--ink-soft);font-size:13px;font-weight:600;color:var(--ink)}
+.pill{display:inline-block;font-size:12px;border-radius:99px;padding:1px 9px;font-weight:600;background:var(--ink-soft);color:var(--ink)}
+.pill.red{background:var(--red-soft);color:var(--red)}.pill.green{background:var(--green-soft);color:var(--green)}.pill.amber{background:var(--amber-soft);color:var(--amber)}
+.flag{font-size:12.5px;color:var(--amber);background:var(--amber-soft);border-radius:8px;padding:3px 8px;margin-top:4px;display:inline-block}
+.seg{display:inline-flex;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:600;color:var(--muted);font-size:14px}
+.seg button.on{background:var(--ink);color:#fff}
+@media (prefers-color-scheme:dark){.seg button.on{color:#11141B}}
+input.search,select.f{border:1px solid var(--rule);background:var(--sheet);border-radius:10px;padding:8px 12px;min-height:40px;width:100%}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.tools > *{flex:1 1 160px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:7px 8px;border-top:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:600;border-top:0}
+td.r,th.r{text-align:right}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:600px){table{font-size:13.5px}th,td{padding:6px 4px}.tablewrap.card{padding:10px 8px}}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,14,25,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+@media (min-width:700px){.modal{align-items:center}}
+.sheet{background:var(--sheet);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom))}
+@media (min-width:700px){.sheet{border-radius:18px}}
+.sheet h3{font-size:18px;margin-bottom:12px}
+.fld{margin-bottom:11px}
+.fld label{display:block;font-size:13px;color:var(--muted);margin-bottom:3px;font-weight:600}
+.fld input,.fld select,.fld textarea{width:100%;border:1px solid var(--rule);background:var(--paper);border-radius:10px;padding:9px 12px;min-height:44px}
+.fld textarea{min-height:80px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stamp{font-size:12px;color:var(--muted);margin-top:6px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom));background:#1F2430;color:#fff;padding:10px 16px;border-radius:10px;z-index:30;font-size:14px;max-width:90vw}
+.op{border:1px solid var(--rule);border-radius:10px;padding:9px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.op input{margin-top:5px;width:18px;height:18px}
+.op .kind{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.op.add .kind{color:var(--green)}.op.update .kind{color:var(--ink)}.op.delete .kind{color:var(--red)}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--rule);border-radius:99px;padding:5px 11px;font-size:13px;background:var(--sheet);cursor:pointer}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.thumbs img{width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--rule)}
+code{background:var(--ink-soft);padding:1px 5px;border-radius:5px;font-size:13px}
+</style>
+</head>
+<body>
+<header class="top"><h1 id="title">Shreeji Finance</h1><span class="sync" id="syncPill" onclick="syncNow(true)" hidden></span></header>
+<main id="view"></main>
+<nav class="tabs" id="tabs"></nav>
+<script>
+"use strict";
+/* ================= storage ================= */
+const KEY='sf3-data', SKEY='sf3-settings', UNDO='sf3-undo';
+const TABLES=['parties','cash','work','deals','shares','installments','landPays'];
+let DB=load(KEY), SET=load(SKEY)||{};
+function load(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast('Could not save on this device: '+e.message);return false}}
+function emptyDB(){return {app:'shreeji-finance',version:3,savedAt:now(),parties:[],cash:[],work:[],deals:[],shares:[],installments:[],landPays:[],deleted:{}}}
+function norm(d){d=d||emptyDB();TABLES.forEach(t=>d[t]=d[t]||[]);d.deleted=d.deleted||{};return d}
+if(DB) DB=norm(DB);
+function now(){return new Date().toISOString()}
+function uid(p){return p+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function save(){DB.savedAt=now();store(KEY,DB);queueSync()}
+function snapshot(label){store(UNDO,{label,at:now(),db:DB})}
+
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const INR=new Intl.NumberFormat('en-IN',{maximumFractionDigits:2});
+const rs=n=>n==null||n===''||isNaN(n)?'—':'₹'+INR.format(Math.round(Number(n)*100)/100);
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fd=d=>{if(!d)return'';const [y,m,dd]=d.split('-');return `${+dd} ${MON[+m-1]} ${y}`};
+const fdShort=d=>{if(!d)return'';const [y,m,dd]=d.split('-');return `${+dd} ${MON[+m-1]}`};
+const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const byId=(t,id)=>DB[t].find(r=>r.id===id);
+const pName=id=>{const p=byId('parties',id);return p?p.name:''};
+const pByName=n=>{if(!n)return null;const k=n.trim().toLowerCase();return DB.parties.find(p=>p.name.toLowerCase()===k)};
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+const ACC={main:'Main cash book',petty:'Site petty cash',outside:'Not in cash book'};
+const KIND={vendor:'Vendor',partner:'Partner',staff:'Staff',buyer:'Buyer',office:'Office'};
+const stamp=r=>r&&r.by?`<div class="stamp">${esc(r.by)}${r.updatedAt?' · '+esc(new Date(r.updatedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})):''}</div>`:'';
+
+/* ================= money logic ================= */
+const signed=c=>c.dir==='in'?Number(c.amount||0):-Number(c.amount||0);
+const balance=acc=>DB.cash.filter(c=>c.account===acc).reduce((s,c)=>s+signed(c),0);
+function partyTotals(id){
+  const work=DB.work.filter(w=>w.partyId===id);
+  const pays=DB.cash.filter(c=>c.partyId===id&&c.dir==='out'&&c.account==='main');
+  const workAmt=work.reduce((s,w)=>s+Number(w.amount||0),0);
+  const paid=pays.reduce((s,c)=>s+Number(c.amount||0),0);
+  const missing=work.filter(w=>w.amount==null||w.amount==='').length;
+  return {work,pays,workAmt,paid,bal:workAmt-paid,missing};
+}
+const vendors=()=>DB.parties.filter(p=>DB.work.some(w=>w.partyId===p.id));
+/* land */
+const SQFT=10.7639;
+const sqftOf=d=>d.areaSqm?d.areaSqm*SQFT:null;
+const totalPrice=d=>d.areaSqm?Math.round(sqftOf(d)*Number(d.rate||321)):null;
+function instDue(d,seq){const adv=Number(d.advance||0),T=totalPrice(d);if(seq===1)return adv;if(T==null)return null;return seq===2?Math.max(T*0.25-adv,0):T*0.25}
+function sellerInstDue(d,s,seq){if(seq===1)return Number(s.advance||0);const v=instDue(d,seq);return v==null?null:Math.round(v*Number(s.percent)/100)}
+const dealPaid=(dealId,seq,shareId)=>DB.landPays.filter(p=>p.dealId===dealId&&(seq==null||p.seq===seq)&&(shareId==null||p.shareId===shareId)).reduce((s,p)=>s+Number(p.amount||0),0);
+
+/* ================= router / tabs ================= */
+const ICON={
+ home:'<path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/>',
+ cash:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',
+ dues:'<path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/>',
+ land:'<path d="M3 20l6-12 4 7 3-4 5 9z"/>',
+ ask:'<path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h6"/>',
+ more:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'};
+const TABS=[['home','Home'],['cash','Cash'],['dues','Dues'],['land','Land'],['ask','Ask'],['more','More']];
+function drawTabs(cur){$('#tabs').innerHTML=TABS.map(([k,l])=>`<a href="#${k}" class="${cur===k?'on':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg>${l}</a>`).join('')}
+window.addEventListener('hashchange',route);
+function route(){
+  if(!DB){drawTabs('');return viewWelcome()}
+  if(!SET.user) return askName();
+  const [r,arg]=(location.hash.slice(1)||'home').split('/');
+  drawTabs(r==='party'?'dues':r==='deal'?'land':r);
+  ({home:viewHome,cash:viewCash,dues:viewDues,party:viewParty,land:viewLand,deal:viewDeal,ask:viewAsk,more:viewMore}[r]||viewHome)(decodeURIComponent(arg||''));
+  window.scrollTo(0,0);
+}
+function setTitle(t){$('#title').textContent=t}
+
+/* ================= welcome ================= */
+function viewWelcome(){
+  setTitle('Shreeji Finance');
+  $('#view').innerHTML=`<div class="card"><h3>Welcome</h3>
+  <p>This app keeps the Shirolawala cash book, vendor dues and land deals. Your data stays on this device. You can also link it to a private GitHub repo so your iPhone and laptop show the same data.</p>
+  <div class="btns"><button class="btn pri" onclick="pickFile(importFirst)">Open data file (shreeji-data.json)</button></div>
+  <div class="btns"><button class="btn" onclick="openSync(true)">Load from GitHub sync</button>
+  <button class="btn" onclick="DB=emptyDB();save();route()">Start empty</button></div>
+  <p class="small muted">On the first device, open the data file. On other devices, use "Load from GitHub sync" after you set it up on the first one, or open the same data file there too.</p></div>`;
+}
+function pickFile(cb,accept){const i=document.createElement('input');i.type='file';i.accept=accept||'.json,application/json';i.onchange=()=>i.files[0]&&cb(i.files[0]);i.click()}
+function importFirst(f){f.text().then(t=>{const d=JSON.parse(t);if(d.app!=='shreeji-finance')throw new Error('This is not a Shreeji Finance file');DB=norm(d);save();toast('Data loaded');location.hash='#home';route()}).catch(e=>toast(e.message))}
+function askName(){
+  setTitle('Shreeji Finance');
+  $('#view').innerHTML=`<div class="card"><h3>Who is using this device?</h3><p class="muted small">Your name is written on every entry you add or change.</p>
+  <div class="fld"><input id="nm" placeholder="e.g. Shreeji Shah" autocomplete="name"></div><button class="btn pri" onclick="if($('#nm').value.trim()){SET.user=$('#nm').value.trim();store(SKEY,SET);route()}">Continue</button></div>`;
+}
+
+/* ================= home ================= */
+function viewHome(){
+  setTitle('Shreeji Finance');
+  const main=balance('main'),petty=balance('petty');
+  let toPay=0,adv=0;vendors().forEach(p=>{const b=partyTotals(p.id).bal;if(b>0)toPay+=b;else adv-=b});
+  const recent=[...DB.cash.filter(c=>c.account!=='outside').map(c=>({...c,_t:'cash'})),...DB.work.map(w=>({...w,_t:'work'}))].sort((a,b)=>(b.date+b.updatedAt).localeCompare(a.date+a.updatedAt)).slice(0,10);
+  const lastDate=DB.cash.filter(c=>c.account==='main').map(c=>c.date).sort().pop();
+  $('#view').innerHTML=`
+  <div class="grid">
+   <div class="stat main"><div class="k">Cash in hand (main book)</div><div class="v num">${rs(main)}</div><div class="s">Last entry ${fd(lastDate)}</div></div>
+   <div class="stat"><div class="k">Site petty cash</div><div class="v num">${rs(petty)}</div><div class="s">With Chiragbhai for small expenses</div></div>
+   <div class="stat"><div class="k">To pay vendors</div><div class="v num out">${rs(toPay)}</div><div class="s">Advance with vendors ${rs(adv)}</div></div>
+  </div>
+  <div class="btns">
+   <button class="btn pri" onclick="openCash(null,{dir:'out'})">+ Paid</button>
+   <button class="btn pri" onclick="openCash(null,{dir:'in'})">+ Received</button>
+   <button class="btn" onclick="openWork()">+ Work on credit</button>
+   <button class="btn" onclick="location.hash='#ask'">Ask / command</button>
+  </div>
+  <h2>Latest entries</h2>
+  <div class="list">${recent.map(itemHTML).join('')||'<div class="empty">No entries yet</div>'}</div>`;
+}
+function itemHTML(r){
+  if(r._t==='work'){return `<div class="item" onclick="openWork('${r.id}')"><div class="sp"><div class="t">${esc(pName(r.partyId)||'—')}</div><div class="d">${fd(r.date)} · Work on credit · ${esc(r.desc||'')}${r.hours?' · '+esc(r.hours)+' h':''}</div></div><div class="a num">${r.amount!=null?rs(r.amount):'<span class="muted small">no amount</span>'}</div></div>`}
+  return `<div class="item" onclick="openCash('${r.id}')"><div class="sp"><div class="t">${esc(r.desc||r.category||'')}</div><div class="d">${fd(r.date)} · ${esc(pName(r.partyId)||ACC[r.account])}${r.account==='petty'?' · petty cash':''}</div></div><div class="a num ${r.dir}">${r.dir==='in'?'+':'−'}${rs(r.amount)}</div></div>`;
+}
+
+/* ================= cash book ================= */
+let cashF={acc:'main',month:'',q:''};
+function viewCash(){
+  setTitle('Cash book');
+  const months=[...new Set(DB.cash.map(c=>c.date.slice(0,7)))].sort().reverse();
+  $('#view').innerHTML=`
+  <div class="tools"><div class="seg" id="accSeg">${Object.entries(ACC).map(([k,l])=>`<button class="${cashF.acc===k?'on':''}" data-a="${k}">${l}</button>`).join('')}</div></div>
+  <div class="tools">
+   <select class="f" id="mon"><option value="">All months</option>${months.map(m=>`<option value="${m}" ${cashF.month===m?'selected':''}>${MON[+m.slice(5)-1]} ${m.slice(0,4)}</option>`).join('')}</select>
+   <input class="search" id="q" placeholder="Search name, note, voucher…" value="${esc(cashF.q)}">
+  </div>
+  <div class="btns"><button class="btn pri" onclick="openCash(null,{dir:'out',account:cashF.acc})">+ Paid</button><button class="btn pri" onclick="openCash(null,{dir:'in',account:cashF.acc})">+ Received</button></div>
+  <div id="cashList"></div>`;
+  $('#accSeg').onclick=e=>{const a=e.target.dataset.a;if(a){cashF.acc=a;viewCash()}};
+  $('#mon').onchange=e=>{cashF.month=e.target.value;drawCash()};
+  $('#q').oninput=e=>{cashF.q=e.target.value;drawCash()};
+  drawCash();
+}
+function drawCash(){
+  const all=DB.cash.filter(c=>c.account===cashF.acc).sort((a,b)=>a.date.localeCompare(b.date)||(a.updatedAt||'').localeCompare(b.updatedAt||''));
+  let run=0;const closing={};all.forEach(c=>{run+=signed(c);closing[c.date]=run});
+  const q=cashF.q.toLowerCase();
+  const rows=all.filter(c=>(!cashF.month||c.date.startsWith(cashF.month))&&(!q||[c.desc,c.category,pName(c.partyId),c.voucher,c.notes,c.ref,String(c.amount)].join(' ').toLowerCase().includes(q))).reverse();
+  let html='',cur='';let tin=0,tout=0;
+  rows.forEach(c=>{if(c.date!==cur){cur=c.date;html+=`<div class="day"><span>${fd(c.date)}</span><span class="num">${cashF.acc==='outside'?'':'Balance '+rs(closing[c.date])}</span></div>`}
+    if(c.dir==='in')tin+=+c.amount;else tout+=+c.amount;
+    html+=`<div class="item" onclick="openCash('${c.id}')"><div class="sp"><div class="t">${esc(c.desc||c.category)}</div><div class="d">${esc(pName(c.partyId))}${c.voucher?' · V '+esc(c.voucher):''}${c.mode&&c.mode!=='Cash'?' · '+esc(c.mode):''}</div>${c.flag?`<div class="flag">${esc(c.flag)}</div>`:''}</div><div class="a num ${c.dir}">${c.dir==='in'?'+':'−'}${rs(c.amount)}</div></div>`});
+  $('#cashList').innerHTML=`<div class="small muted" style="margin-bottom:6px">${rows.length} entries · Received <b class="in num">${rs(tin)}</b> · Paid <b class="out num">${rs(tout)}</b></div><div class="list">${html||'<div class="empty">Nothing here</div>'}</div>`;
+}
+
+/* ================= forms ================= */
+function modal(html,onMount){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="sheet">${html}</div>`;m.addEventListener('click',e=>{if(e.target===m)m.remove()});document.body.appendChild(m);onMount&&onMount(m);return m}
+const fld=(id,label,val,type='text',extra='')=>`<div class="fld"><label for="${id}">${label}</label><input id="${id}" type="${type}" value="${esc(val==null?'':val)}" ${extra}></div>`;
+const sel=(id,label,val,opts)=>`<div class="fld"><label for="${id}">${label}</label><select id="${id}">${opts.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(val)?'selected':''}>${esc(l)}</option>`).join('')}</select></div>`;
+const area=(id,label,val)=>`<div class="fld"><label for="${id}">${label}</label><textarea id="${id}">${esc(val||'')}</textarea></div>`;
+const partyList=()=>`<datalist id="plist">${DB.parties.map(p=>`<option value="${esc(p.name)}">`).join('')}</datalist>`;
+const catList=()=>`<datalist id="clist">${[...new Set(DB.cash.map(c=>c.category).filter(Boolean))].sort().map(c=>`<option value="${esc(c)}">`).join('')}</datalist>`;
+const v=(m,id)=>{const e=m.querySelector('#'+id);return e?e.value.trim():''};
+const numOrNull=s=>{s=String(s).replace(/[,₹\s]/g,'');return s===''?null:Number(s)};
+function resolveParty(name){if(!name)return null;let p=pByName(name);if(!p){p={id:uid('p'),name:name.trim(),kind:'vendor',updatedAt:now(),by:SET.user};DB.parties.push(p)}return p.id}
+function touch(r){r.updatedAt=now();r.by=SET.user;return r}
+function del(t,id){DB[t]=DB[t].filter(r=>r.id!==id);DB.deleted[id]=now()}
+
+function openCash(id,pre={}){
+  const c=id?byId('cash',id):{date:today(),dir:'out',account:'main',mode:'Cash',...pre};
+  const m=modal(`<h3>${id?'Edit':'New'} cash entry</h3>${partyList()}${catList()}
+   <div class="two">${fld('f_date','Date',c.date,'date')}${sel('f_dir','Type',c.dir,[['out','Paid (out)'],['in','Received (in)']])}</div>
+   <div class="two">${fld('f_amt','Amount (₹)',c.amount,'text','inputmode="decimal"')}${sel('f_acc','Book',c.account,Object.entries(ACC))}</div>
+   ${fld('f_party','Name / party',pName(c.partyId),'text','list="plist"')}
+   ${fld('f_desc','Description',c.desc)}
+   <div class="two">${fld('f_cat','Category',c.category,'text','list="clist"')}${fld('f_mode','Mode',c.mode,'text','list="mlist"')}</div>
+   <datalist id="mlist"><option value="Cash"><option value="G-Pay"><option value="Cheque"><option value="Bank transfer"></datalist>
+   <div class="two">${fld('f_v','Voucher / slip no.',c.voucher)}${fld('f_ref','Reference / cheque no.',c.ref)}</div>
+   <div class="two">${fld('f_led','Ledger no.',c.ledger)}${fld('f_page','Book page',c.page)}</div>
+   ${area('f_notes','Notes',c.notes)}${c.flag?`<div class="flag">${esc(c.flag)}</div>`:''}${stamp(c)}
+   <div class="btns"><button class="btn pri" id="ok">Save</button><button class="btn" id="cancel">Cancel</button>${id?'<span class="sp"></span><button class="btn red" id="rm">Delete</button>':''}</div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>{
+    const amt=numOrNull(v(m,'f_amt'));if(!amt||amt<=0)return toast('Enter the amount');
+    if(!v(m,'f_date'))return toast('Enter the date');
+    const r=id?c:{id:uid('c')};
+    Object.assign(r,{date:v(m,'f_date'),dir:v(m,'f_dir'),amount:amt,account:v(m,'f_acc'),partyId:resolveParty(v(m,'f_party')),desc:v(m,'f_desc'),category:v(m,'f_cat'),mode:v(m,'f_mode'),voucher:v(m,'f_v'),ref:v(m,'f_ref'),ledger:v(m,'f_led'),page:v(m,'f_page'),notes:v(m,'f_notes')});
+    touch(r);if(!id)DB.cash.push(r);save();m.remove();toast('Saved');route();};
+  if(id)m.querySelector('#rm').onclick=()=>{if(confirm('Delete this entry?')){del('cash',id);save();m.remove();route()}};
+}
+function openWork(id,pre={}){
+  const w=id?byId('work',id):{date:today(),...pre};
+  const m=modal(`<h3>${id?'Edit':'New'} work on credit</h3>${partyList()}
+   ${fld('f_date','Date',w.date,'date')}
+   ${fld('f_party','Vendor',pName(w.partyId),'text','list="plist"')}
+   ${fld('f_desc','Work / item',w.desc,'text','placeholder="JCB worked / 3 tractors ran on the road"')}
+   <div class="two">${fld('f_hours','Hours (h:mm)',w.hours,'text','placeholder="8:10"')}${fld('f_mach','Machine no.',w.machine)}</div>
+   <div class="two">${fld('f_amt','Amount (₹) – blank if not known',w.amount,'text','inputmode="decimal"')}${fld('f_v','Slip no.',w.voucher)}</div>
+   <div class="two">${fld('f_led','Ledger no.',w.ledger)}${fld('f_page','Book page',w.page)}</div>
+   ${area('f_notes','Notes',w.notes)}${w.flag?`<div class="flag">${esc(w.flag)}</div>`:''}${stamp(w)}
+   <div class="btns"><button class="btn pri" id="ok">Save</button><button class="btn" id="cancel">Cancel</button>${id?'<span class="sp"></span><button class="btn red" id="rm">Delete</button>':''}</div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>{
+    if(!v(m,'f_party'))return toast('Enter the vendor');
+    const r=id?w:{id:uid('w')};
+    Object.assign(r,{date:v(m,'f_date'),partyId:resolveParty(v(m,'f_party')),desc:v(m,'f_desc'),hours:v(m,'f_hours'),machine:v(m,'f_mach'),amount:numOrNull(v(m,'f_amt')),voucher:v(m,'f_v'),ledger:v(m,'f_led'),page:v(m,'f_page'),notes:v(m,'f_notes')});
+    touch(r);if(!id)DB.work.push(r);save();m.remove();toast('Saved');route();};
+  if(id)m.querySelector('#rm').onclick=()=>{if(confirm('Delete this work entry?')){del('work',id);save();m.remove();route()}};
+}
+function openParty(id){
+  const p=id?byId('parties',id):{kind:'vendor'};
+  const m=modal(`<h3>${id?'Edit':'New'} party</h3>
+   ${fld('f_name','Name',p.name)}
+   <div class="two">${sel('f_kind','Type',p.kind,Object.entries(KIND))}${fld('f_led','Ledger no.',p.ledger)}</div>
+   <div class="two">${fld('f_wt','Work type',p.work_type)}${fld('f_st','Status',p.status,'text','list="slist"')}</div>
+   <datalist id="slist"><option value="Pending"><option value="Settled"><option value="Advance given"><option value="Unknown"></datalist>
+   ${area('f_note','Notes',p.note)}${stamp(p)}
+   <div class="btns"><button class="btn pri" id="ok">Save</button><button class="btn" id="cancel">Cancel</button></div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>{if(!v(m,'f_name'))return toast('Enter a name');
+    const r=id?p:{id:uid('p')};Object.assign(r,{name:v(m,'f_name'),kind:v(m,'f_kind'),ledger:v(m,'f_led'),work_type:v(m,'f_wt'),status:v(m,'f_st'),note:v(m,'f_note')});
+    touch(r);if(!id)DB.parties.push(r);save();m.remove();route()};
+}
+
+/* ================= dues ================= */
+let duesF='open';
+function viewDues(){
+  setTitle('Vendor dues');
+  const list=vendors().map(p=>({p,...partyTotals(p.id)})).sort((a,b)=>b.bal-a.bal);
+  const shown=list.filter(x=>duesF==='all'||(duesF==='open'?x.bal>0:x.bal<0));
+  const total=list.filter(x=>x.bal>0).reduce((s,x)=>s+x.bal,0);
+  $('#view').innerHTML=`
+  <div class="grid"><div class="stat"><div class="k">Total to pay</div><div class="v num out">${rs(total)}</div><div class="s">Work on credit minus payments from the main cash book</div></div></div>
+  <div class="tools"><div class="seg" id="dseg">${[['open','To pay'],['adv','Advance / paid more'],['all','All vendors']].map(([k,l])=>`<button data-k="${k}" class="${duesF===k?'on':''}">${l}</button>`).join('')}</div></div>
+  <div class="btns"><button class="btn pri" onclick="openWork()">+ Work on credit</button><button class="btn" onclick="openParty()">+ New party</button></div>
+  <div class="list">${shown.map(x=>`<div class="item" onclick="location.hash='#party/${x.p.id}'"><div class="sp"><div class="t">${esc(x.p.name)}</div><div class="d">Work ${rs(x.workAmt)} · Paid ${rs(x.paid)}${x.missing?` · <span class="pill amber">${x.missing} without amount</span>`:''}</div></div><div class="a num">${x.bal>0?`<span class="out">${rs(x.bal)}</span><div class="small muted">to pay</div>`:x.bal<0?`<span class="in">${rs(-x.bal)}</span><div class="small muted">paid more</div>`:'<span class="pill green">Clear</span>'}</div></div>`).join('')||'<div class="empty">Nothing here</div>'}</div>
+  <h2>All parties</h2><div class="list">${DB.parties.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<div class="item" onclick="location.hash='#party/${p.id}'"><div class="sp"><div class="t">${esc(p.name)}</div><div class="d">${esc(KIND[p.kind]||p.kind||'')}${p.ledger?' · Ledger '+esc(p.ledger):''}${p.work_type?' · '+esc(p.work_type):''}</div></div>${p.status?`<span class="pill ${/settled/i.test(p.status)?'green':/pending/i.test(p.status)?'red':'amber'}">${esc(p.status)}</span>`:''}</div>`).join('')}</div>`;
+  $('#dseg').onclick=e=>{if(e.target.dataset.k){duesF=e.target.dataset.k;viewDues()}};
+}
+function viewParty(id){
+  const p=byId('parties',id);if(!p)return viewDues();
+  setTitle(p.name);
+  const t=partyTotals(id);
+  const other=DB.cash.filter(c=>c.partyId===id&&!(c.dir==='out'&&c.account==='main'));
+  const lines=[...t.work.map(w=>({d:w.date,k:'w',r:w})),...t.pays.map(c=>({d:c.date,k:'p',r:c}))].sort((a,b)=>a.d.localeCompare(b.d)||(a.k==='w'?-1:1));
+  let run=0;
+  const rows=lines.map(l=>{if(l.k==='w'){run+=Number(l.r.amount||0);return `<tr onclick="openWork('${l.r.id}')" style="cursor:pointer"><td class="num">${fdShort(l.d)}</td><td>${esc(l.r.desc||'')}${l.r.hours?' · '+esc(l.r.hours)+' h':''}${l.r.voucher?` <span class="muted small">slip ${esc(l.r.voucher)}</span>`:''}${l.r.flag?`<div class="flag">${esc(l.r.flag)}</div>`:''}</td><td class="r num">${l.r.amount!=null?rs(l.r.amount):'<span class="pill amber">blank</span>'}</td><td class="r"></td><td class="r num">${rs(run)}</td></tr>`}
+    run-=Number(l.r.amount);return `<tr onclick="openCash('${l.r.id}')" style="cursor:pointer"><td class="num">${fdShort(l.d)}</td><td>${esc(l.r.desc||'Paid')}</td><td></td><td class="r num out">${rs(l.r.amount)}</td><td class="r num">${rs(run)}</td></tr>`}).join('');
+  $('#view').innerHTML=`
+  <div class="btns"><button class="btn sm" onclick="history.back()">← Back</button><span class="sp"></span><button class="btn sm" onclick="openParty('${id}')">Edit party</button></div>
+  <div class="grid">
+   <div class="stat"><div class="k">Work on credit</div><div class="v num">${rs(t.workAmt)}</div>${t.missing?`<div class="s">${t.missing} lines have no amount</div>`:''}</div>
+   <div class="stat"><div class="k">Paid</div><div class="v num">${rs(t.paid)}</div></div>
+   <div class="stat"><div class="k">${t.bal>=0?'To pay':'Paid more / advance'}</div><div class="v num ${t.bal>0?'out':'in'}">${rs(Math.abs(t.bal))}</div></div>
+  </div>
+  ${p.note?`<div class="card small">${esc(p.note)}</div>`:''}
+  <div class="btns"><button class="btn pri" onclick="openWork(null,{partyId:'${id}'})">+ Work</button><button class="btn pri" onclick="openCash(null,{dir:'out',partyId:'${id}'})">+ Payment</button><button class="btn" onclick="location.hash='#ask';setTimeout(()=>{$('#cmd').value='${esc(p.name).replace(/'/g,'')}: ';$('#cmd').focus()},50)">Ask about this party</button></div>
+  ${lines.length?`<div class="card tablewrap"><table><tr><th>Date</th><th>Work / payment</th><th class="r">Work</th><th class="r">Paid</th><th class="r">Balance</th></tr>${rows}</table></div>`:''}
+  ${other.length?`<h2>Other cash entries</h2><div class="list">${other.map(c=>itemHTML({...c,_t:'cash'})).join('')}</div>`:''}`;
+}
+
+/* ================= land ================= */
+function viewLand(){
+  setTitle('Land deals');
+  $('#view').innerHTML=DB.deals.slice().sort((a,b)=>(a.sort||0)-(b.sort||0)).map(d=>{const T=totalPrice(d);const paid=dealPaid(d.id);
+   return `<div class="card" style="cursor:pointer" onclick="location.hash='#deal/${d.id}'"><h3>${esc(d.title)}</h3>
+   <div class="small muted">${esc(d.landType||'')} · ${esc(d.status||'')}</div>
+   <div class="grid" style="margin:10px 0 0"><div><div class="small muted">Total price</div><div class="num" style="font-weight:700">${T?rs(T):'Needs measured area'}</div></div>
+   <div><div class="small muted">Advance (bana)</div><div class="num" style="font-weight:700">${rs(d.advance)}</div><div class="small muted">Paid status: ${esc(d.advanceStatus||'—')}</div></div>
+   <div><div class="small muted">Recorded land payments</div><div class="num" style="font-weight:700">${rs(paid)}</div></div></div></div>`}).join('')||'<div class="empty">No land deals</div>';
+}
+function viewDeal(id){
+  const d=byId('deals',id);if(!d)return viewLand();
+  setTitle('Land deal');
+  const sh=DB.shares.filter(s=>s.dealId===id).sort((a,b)=>a.seq-b.seq);
+  const ins=DB.installments.filter(i=>i.dealId===id).sort((a,b)=>a.seq-b.seq);
+  const T=totalPrice(d);
+  const pays=DB.landPays.filter(p=>p.dealId===id).sort((a,b)=>a.date.localeCompare(b.date));
+  $('#view').innerHTML=`
+  <div class="btns"><button class="btn sm" onclick="history.back()">← Back</button><span class="sp"></span><button class="btn sm" onclick="openDeal('${id}')">Edit area / rate</button></div>
+  <div class="card"><h3>${esc(d.title)}</h3><div class="small">${esc(d.details||'')}</div><div class="small muted" style="margin-top:6px">${esc(d.location||'')}</div>
+   <div class="grid" style="margin:12px 0 0">
+    <div><div class="small muted">Area</div><div class="num"><b>${d.areaSqm?INR.format(d.areaSqm)+' sq m':'—'}</b></div><div class="small muted">${d.areaSqm?INR.format(Math.round(sqftOf(d)))+' sq ft':esc(d.area||'')}</div></div>
+    <div><div class="small muted">Rate</div><div class="num"><b>₹${INR.format(d.rate||321)} / sq ft</b></div></div>
+    <div><div class="small muted">Total price</div><div class="num"><b>${T?rs(T):'Enter measured area'}</b></div></div>
+   </div>${d.areaSource?`<div class="small muted" style="margin-top:6px">${esc(d.areaSource)}</div>`:''}${d.flag?`<div class="flag">${esc(d.flag)}</div>`:''}</div>
+  <h2>Payment schedule</h2>
+  <div class="card tablewrap"><table><tr><th>Installment</th><th>Due</th><th class="r">Amount</th><th class="r">Paid</th></tr>
+  ${ins.map(i=>`<tr><td>${esc(i.label)}</td><td class="small">${esc(i.due||'')}</td><td class="r num">${instDue(d,i.seq)!=null?rs(instDue(d,i.seq)):'<span class="small muted">after measurement</span>'}</td><td class="r num">${rs(dealPaid(id,i.seq))}</td></tr>`).join('')}</table>
+  <div class="small muted" style="margin-top:8px">1st installment = 25% of total minus the advance. 2nd, 3rd and 4th = 25% each.</div></div>
+  <div class="btns"><button class="btn pri" onclick="openLandPay('${id}')">+ Land payment</button></div>
+  ${pays.length?`<h2>Land payments</h2><div class="list">${pays.map(p=>`<div class="item" onclick="openLandPay('${id}','${p.id}')"><div class="sp"><div class="t">${esc(p.shareId?(byId('shares',p.shareId)||{}).name:'All sellers')}</div><div class="d">${fd(p.date)} · ${esc((ins.find(i=>i.seq===p.seq)||{}).label||'')} · ${esc(p.mode||'')} ${esc(p.ref||'')}</div></div><div class="a num out">${rs(p.amount)}</div></div>`).join('')}</div>`:''}
+  <h2>Sellers (${sh.length})</h2>
+  <div class="card tablewrap"><table><tr><th>#</th><th>Seller</th><th class="r">Share</th><th class="r">Advance</th><th class="r">Each later inst.</th><th class="r">Paid</th></tr>
+  ${sh.map(s=>`<tr><td>${s.seq}</td><td>${esc(s.name)}<div class="small muted">${esc(s.bank||'')}</div>${s.notes?`<div class="small muted">${esc(s.notes)}</div>`:''}${s.flag?`<div class="flag">${esc(s.flag)}</div>`:''}</td><td class="r num">${s.percent}%</td><td class="r num">${rs(s.advance)}</td><td class="r num">${sellerInstDue(d,s,3)!=null?rs(sellerInstDue(d,s,3)):'—'}</td><td class="r num">${rs(dealPaid(id,null,s.id))}</td></tr>`).join('')}
+  <tr><th></th><th>Total</th><th class="r num">${Math.round(sh.reduce((a,s)=>a+Number(s.percent),0)*1000)/1000}%</th><th class="r num">${rs(sh.reduce((a,s)=>a+Number(s.advance||0),0))}</th><th></th><th class="r num">${rs(dealPaid(id))}</th></tr></table></div>
+  <div class="card small"><b>Buyers:</b> ${esc(d.buyers||'')}<br><br>${esc(d.notes||'')}</div>`;
+}
+function openDeal(id){
+  const d=byId('deals',id);
+  const m=modal(`<h3>Area and rate</h3>${fld('f_a','Measured area (sq m)',d.areaSqm,'text','inputmode="decimal"')}${fld('f_src','Where this area comes from',d.areaSource)}${fld('f_r','Rate (₹ per sq ft)',d.rate,'text','inputmode="decimal"')}
+   ${sel('f_adv','Advance paid?',d.advanceStatus||'Unknown',[['Unknown','Unknown'],['Paid','Paid'],['Not paid','Not paid']])}${fld('f_st','Deal status',d.status)}
+   <div class="btns"><button class="btn pri" id="ok">Save</button><button class="btn" id="cancel">Cancel</button></div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>{Object.assign(d,{areaSqm:numOrNull(v(m,'f_a')),areaSource:v(m,'f_src'),rate:numOrNull(v(m,'f_r'))||321,advanceStatus:v(m,'f_adv'),status:v(m,'f_st')});touch(d);save();m.remove();route()};
+}
+function openLandPay(dealId,id){
+  const sh=DB.shares.filter(s=>s.dealId===dealId).sort((a,b)=>a.seq-b.seq);
+  const ins=DB.installments.filter(i=>i.dealId===dealId).sort((a,b)=>a.seq-b.seq);
+  const p=id?byId('landPays',id):{date:today(),seq:1,mode:'Bank transfer'};
+  const m=modal(`<h3>${id?'Edit':'New'} land payment</h3>
+   ${fld('f_date','Date',p.date,'date')}
+   ${sel('f_seq','Installment',p.seq,ins.map(i=>[i.seq,i.label]))}
+   ${sel('f_sh','Paid to',p.shareId||'',[['','All sellers (one total)'],...sh.map(s=>[s.id,s.seq+'. '+s.name])])}
+   <div class="two">${fld('f_amt','Amount (₹)',p.amount,'text','inputmode="decimal"')}${fld('f_mode','Mode',p.mode)}</div>
+   ${fld('f_ref','Reference / UTR / cheque',p.ref)}${area('f_notes','Notes',p.notes)}
+   <p class="small muted">This does not change cash in hand. If it was paid in cash, also add it in the Cash book.</p>
+   <div class="btns"><button class="btn pri" id="ok">Save</button><button class="btn" id="cancel">Cancel</button>${id?'<span class="sp"></span><button class="btn red" id="rm">Delete</button>':''}</div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>{const amt=numOrNull(v(m,'f_amt'));if(!amt)return toast('Enter the amount');
+    const r=id?p:{id:uid('l'),dealId};Object.assign(r,{date:v(m,'f_date'),seq:+v(m,'f_seq'),shareId:v(m,'f_sh')||null,amount:amt,mode:v(m,'f_mode'),ref:v(m,'f_ref'),notes:v(m,'f_notes')});
+    touch(r);if(!id)DB.landPays.push(r);save();m.remove();route()};
+  if(id)m.querySelector('#rm').onclick=()=>{if(confirm('Delete this land payment?')){del('landPays',id);save();m.remove();route()}};
+}
+
+/* ================= Ask / command ================= */
+let askImgs=[];let lastOps=null;
+function viewAsk(){
+  setTitle('Ask / command');
+  const hasKey=!!SET.aiKey;
+  const u=load(UNDO);
+  $('#view').innerHTML=`
+  <div class="card">
+   <h3>Tell the app what to change</h3>
+   <p class="small muted" style="margin-top:0">Type in English or Gujarati, or attach photos of the cash book pages. You see every change before it is saved.</p>
+   <div class="fld"><textarea id="cmd" rows="4" placeholder="e.g. 20 Oct Rajubhai JCB 6 hours 40 min 6,000 slip 45&#10;Paid Panchal JCB 7,050 cash on 21 Oct&#10;Change Prakashbhai 6 Oct amount to 7,500&#10;How much do we owe Sidhabhai?"></textarea></div>
+   <div class="thumbs" id="thumbs"></div>
+   <div class="btns">
+    <button class="btn pri" id="go" ${hasKey?'':'disabled'}>Send</button>
+    <button class="btn" onclick="pickFile(addImgs,'image/*')">Attach photo</button>
+    <span class="sp"></span>
+    <button class="btn" onclick="openPaste()">Paste update code</button>
+   </div>
+   ${hasKey?'':`<div class="flag">To use Send, add your Claude API key in More → Settings. Without a key you can still ask Claude in chat for an "update code" and paste it here.</div>`}
+   <div class="chips">${['How much cash in hand?','Who do we owe money to?','Show Rajubhai October total','Read this cash book page and add the entries'].map(s=>`<span class="chip" onclick="$('#cmd').value=this.textContent">${s}</span>`).join('')}</div>
+  </div>
+  <div id="answer"></div>
+  ${u?`<div class="card small"><b>Last change:</b> ${esc(u.label)} <span class="muted">(${new Date(u.at).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})})</span><div class="btns"><button class="btn sm red" onclick="undoLast()">Undo it</button></div></div>`:''}`;
+  drawThumbs();
+  const go=$('#go');if(go)go.onclick=runAsk;
+}
+function addImgs(f){shrink(f).then(d=>{askImgs.push(d);drawThumbs()}).catch(e=>toast(e.message))}
+function drawThumbs(){const t=$('#thumbs');if(t)t.innerHTML=askImgs.map((d,i)=>`<img src="data:image/jpeg;base64,${d}" title="Tap to remove" onclick="askImgs.splice(${i},1);drawThumbs()">`).join('')}
+function shrink(file){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const max=1800;let {width:w,height:h}=img;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);res(c.toDataURL('image/jpeg',.85).split(',')[1]);URL.revokeObjectURL(img.src)};img.onerror=()=>rej(new Error('Could not read that image'));img.src=URL.createObjectURL(file)})}
+
+function aiContext(){
+  const P=DB.parties.map(p=>({id:p.id,name:p.name,kind:p.kind,ledger:p.ledger||undefined,status:p.status||undefined}));
+  const C=DB.cash.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,120).map(c=>({id:c.id,date:c.date,dir:c.dir,amount:c.amount,account:c.account,party:pName(c.partyId)||undefined,desc:c.desc,voucher:c.voucher||undefined,category:c.category||undefined}));
+  const W=DB.work.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,120).map(w=>({id:w.id,date:w.date,party:pName(w.partyId),desc:w.desc,hours:w.hours||undefined,amount:w.amount,voucher:w.voucher||undefined}));
+  const dues=vendors().map(p=>{const t=partyTotals(p.id);return {party:p.name,work:t.workAmt,paid:t.paid,balance:t.bal,linesWithoutAmount:t.missing}});
+  return {today:today(),cashInHand:{main:balance('main'),petty:balance('petty')},dues,parties:P,recentCash:C,recentWork:W,landDeals:DB.deals.map(d=>({id:d.id,title:d.title,areaSqm:d.areaSqm,rate:d.rate,totalPrice:totalPrice(d),advance:d.advance}))};
+}
+const SYSTEM=`You are the assistant inside "Shreeji Finance", the accounts app of Shreeji Developers (Bodeli, Gujarat) for the Shirolawala land project. The user is the owner or staff. They write in English or Gujarati and may attach photos of the Gujarati cash book (rojmel), vouchers and JCB/tractor slips.
+
+Your job: answer questions from the data given, and when the user wants something added or changed, propose changes with the propose_changes tool. Never invent amounts or names; if a figure is unreadable, leave it null and say so in "flag". Write all entries in English, keeping descriptions close to what the book says. Amounts are plain numbers in rupees. Dates are YYYY-MM-DD.
+
+How the books work:
+- Cash book (table "cash"): dir "in" = received (jama), "out" = paid (udhar/naame). account: "main" = Chiragbhai's main cash book; "petty" = small site petty cash; "outside" = recorded but not part of cash in hand (e.g. bank payments not in the book). In the Gujarati book the left side holds receipts and credit work lines, the right side holds payments; "પા:" is the voucher (slip) number; the small highlighted number is the ledger (khatavahi) number; "બાકી" means on credit (not paid).
+- Work on credit (table "work"): JCB hours, tractor trips, materials brought on credit. amount may be null when not written. JCB is usually Rs 900/hour, tractors Rs 2,000 each, unless the book says otherwise.
+- Vendor balance = sum of work amounts - payments ("out" entries in the main book with that party).
+- Parties: refer to existing parties by exact name (use partyName). If a new party is needed, just use the new name; it will be created.
+- Before adding, check recentCash/recentWork so you do not add an entry that already exists (same date, party, amount, voucher). Say so if you skip one.
+- For a cash book page, check your entries against the opening and closing balances written on the page and mention whether they match.
+
+When you use propose_changes, also give a short plain-English summary. If the user only asks a question, answer in "answer" and send an empty ops list.`;
+const TOOL={name:'propose_changes',description:'Answer the user and propose changes to the app data. Changes are shown to the user for approval before saving.',input_schema:{type:'object',properties:{
+  answer:{type:'string',description:'Plain-English reply / summary for the user (short, use ₹ and Indian number format).'},
+  ops:{type:'array',items:{type:'object',properties:{
+    op:{type:'string',enum:['add','update','delete']},
+    table:{type:'string',enum:['cash','work','parties','landPays']},
+    id:{type:'string',description:'Existing record id for update/delete'},
+    fields:{type:'object',description:'For add/update. cash: date, dir(in|out), amount, account(main|petty|outside), partyName, category, desc, voucher, ledger, page, mode, ref, notes, flag. work: date, partyName, desc, hours, machine, amount, voucher, ledger, page, notes, flag. parties: name, kind(vendor|partner|staff|buyer|office), work_type, status, ledger, note. landPays: dealId, seq(1-5), shareId, date, amount, mode, ref, notes.'},
+    why:{type:'string',description:'One line explaining this change'}},required:['op','table']}}},required:['answer','ops']}};
+async function runAsk(){
+  const text=$('#cmd').value.trim();if(!text&&!askImgs.length)return toast('Type a command or attach a photo');
+  const out=$('#answer');out.innerHTML='<div class="card muted">Working on it… (a photo can take up to a minute)</div>';$('#go').disabled=true;
+  try{
+    const content=[...askImgs.map(d=>({type:'image',source:{type:'base64',media_type:'image/jpeg',data:d}})),{type:'text',text:'CURRENT DATA (JSON):\n'+JSON.stringify(aiContext())+'\n\nUSER ('+SET.user+'):\n'+(text||'Read the attached page(s) and add the entries.')}];
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':SET.aiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:SET.aiModel||'claude-sonnet-5-5',max_tokens:8000,system:SYSTEM,tools:[TOOL],tool_choice:{type:'tool',name:'propose_changes'},messages:[{role:'user',content}]})});
+    const j=await r.json();
+    if(!r.ok)throw new Error((j.error&&j.error.message)||('Error '+r.status));
+    const tu=(j.content||[]).find(c=>c.type==='tool_use');if(!tu)throw new Error('No reply');
+    showOps(tu.input.answer,tu.input.ops||[],out,'Ask: '+(text||'photo').slice(0,60));
+    askImgs=[];drawThumbs();
+  }catch(e){out.innerHTML=`<div class="card"><b class="out">Could not get an answer.</b><div class="small">${esc(e.message)}</div><div class="small muted">Check the API key in More → Settings and your internet connection.</div></div>`}
+  finally{const g=$('#go');if(g)g.disabled=false}
+}
+function opLine(o){
+  const f=o.fields||{};const T={cash:'Cash',work:'Work',parties:'Party',landPays:'Land payment'}[o.table]||o.table;
+  if(o.op==='delete'){const r=byId(o.table,o.id);return `${T}: ${r?esc(describe(o.table,r)):'(not found) '+esc(o.id)}`}
+  if(o.op==='update'){const r=byId(o.table,o.id);return `${T}: ${r?esc(describe(o.table,r)):'(not found)'} → ${esc(Object.entries(f).map(([k,v])=>k+': '+(typeof v==='number'?INR.format(v):v)).join(', '))}`}
+  return `${T}: ${esc(describe(o.table,{...f,partyId:null,_pn:f.partyName}))}`;
+}
+function describe(t,r){const pn=r._pn||pName(r.partyId);
+  if(t==='cash')return `${fd(r.date)} · ${r.dir==='in'?'Received':'Paid'} ${rs(r.amount)} · ${pn||''} · ${r.desc||''}${r.account&&r.account!=='main'?' · '+ACC[r.account]:''}${r.voucher?' · V '+r.voucher:''}`;
+  if(t==='work')return `${fd(r.date)} · ${pn||''} · ${r.desc||''}${r.hours?' · '+r.hours+' h':''} · ${r.amount!=null?rs(r.amount):'no amount'}${r.voucher?' · slip '+r.voucher:''}`;
+  if(t==='parties')return `${r.name||''}${r.kind?' ('+r.kind+')':''}${r.status?' · '+r.status:''}`;
+  if(t==='landPays')return `${fd(r.date)} · ${rs(r.amount)} · installment ${r.seq||''}`;
+  return JSON.stringify(r)}
+function showOps(answer,ops,out,label){
+  lastOps=ops;
+  out.innerHTML=`<div class="card"><div style="white-space:pre-wrap">${esc(answer||'')}</div>
+   ${ops.length?`<h3 style="margin-top:14px">Proposed changes (${ops.length})</h3><div class="small muted" style="margin-bottom:8px">Untick anything you don't want, then Apply.</div>
+   ${ops.map((o,i)=>`<label class="op ${o.op}"><input type="checkbox" checked data-i="${i}"><div><div class="kind">${o.op==='add'?'Add':o.op==='update'?'Change':'Delete'}</div><div>${opLine(o)}</div>${o.fields&&o.fields.flag?`<div class="flag">${esc(o.fields.flag)}</div>`:''}${o.why?`<div class="small muted">${esc(o.why)}</div>`:''}</div></label>`).join('')}
+   <div class="btns"><button class="btn pri" id="apply">Apply ticked changes</button><button class="btn" id="discard">Discard</button></div>`:''}</div>`;
+  const a=out.querySelector('#apply');
+  if(a){a.onclick=()=>{const pick=[...out.querySelectorAll('input[type=checkbox]')].filter(c=>c.checked).map(c=>ops[+c.dataset.i]);const n=applyOps(pick,label);out.innerHTML=`<div class="card"><b class="in">${n} change${n===1?'':'s'} saved.</b> <span class="small muted">You can undo it below.</span></div>`;$('#cmd')&&($('#cmd').value='');setTimeout(viewAsk,1200)};
+   out.querySelector('#discard').onclick=()=>{out.innerHTML=''}}
+}
+const FIELDS={cash:['date','dir','amount','account','category','desc','voucher','ledger','page','mode','ref','notes','flag'],work:['date','desc','hours','machine','amount','voucher','ledger','page','notes','flag'],parties:['name','kind','work_type','status','ledger','note'],landPays:['dealId','seq','shareId','date','amount','mode','ref','notes']};
+function applyOps(ops,label){
+  snapshot(label);let n=0;
+  ops.forEach(o=>{const t=o.table;if(!DB[t]||!FIELDS[t])return;const f=o.fields||{};
+    const clean={};FIELDS[t].forEach(k=>{if(k in f)clean[k]=(k==='amount'||k==='seq')&&f[k]!=null?numOrNull(f[k]):f[k]});
+    if('partyName' in f&&t!=='parties')clean.partyId=resolveParty(f.partyName);
+    if(o.op==='add'){const r={id:uid(t[0]),...(t==='cash'?{account:'main',mode:'Cash'}:{}),...clean};touch(r);DB[t].push(r);n++}
+    else if(o.op==='update'){const r=byId(t,o.id);if(r){Object.assign(r,clean);touch(r);n++}}
+    else if(o.op==='delete'){if(byId(t,o.id)){del(t,o.id);n++}}});
+  save();return n;
+}
+function undoLast(){const u=load(UNDO);if(!u)return;if(!confirm('Undo "'+u.label+'"? Any change made after it will also be lost.'))return;
+  const t=now(),cur=DB,snap=norm(u.db);
+  const keep=new Set(TABLES.flatMap(tb=>snap[tb].map(r=>r.id)));
+  const del={...cur.deleted,...snap.deleted};
+  /* entries added after the snapshot get a delete mark so sync does not bring them back */
+  TABLES.forEach(tb=>cur[tb].forEach(r=>{if(!keep.has(r.id))del[r.id]=t}));
+  /* restored entries get a fresh time so they win over newer copies elsewhere */
+  TABLES.forEach(tb=>snap[tb].forEach(r=>{r.updatedAt=t;delete del[r.id]}));
+  snap.deleted=del;DB=snap;
+  localStorage.removeItem(UNDO);save();toast('Undone');route()}
+function openPaste(){
+  const m=modal(`<h3>Paste update code</h3><p class="small muted">Ask Claude in chat: "give me an update code for Shreeji Finance for these entries". Paste the code it gives you here.</p>${area('f_code','Update code','')}<div class="btns"><button class="btn pri" id="ok">Check</button><button class="btn" id="cancel">Cancel</button></div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>{try{let s=v(m,'f_code').replace(/^```(json)?/,'').replace(/```$/,'');const j=JSON.parse(s);const ops=Array.isArray(j)?j:j.ops;if(!Array.isArray(ops))throw new Error('No changes found in the code');m.remove();location.hash='#ask';setTimeout(()=>showOps(j.answer||j.summary||'Update code',ops,$('#answer'),'Pasted update code'),60)}catch(e){toast('That code could not be read: '+e.message)}};
+}
+
+/* ================= more / settings / backup ================= */
+function viewMore(){
+  setTitle('More');
+  const s=SET;
+  $('#view').innerHTML=`
+  <div class="card"><h3>Backup</h3><p class="small muted">Download a copy of all data. Keep it safe; do not upload it to a public place.</p>
+   <div class="btns"><button class="btn pri" onclick="downloadBackup()">Download backup</button><button class="btn" onclick="pickFile(restoreFile)">Restore / merge a backup</button></div>
+   <div class="btns"><button class="btn" onclick="csvCash()">Cash book CSV (Excel)</button><button class="btn" onclick="csvWork()">Work on credit CSV</button><button class="btn" onclick="csvDues()">Vendor dues CSV</button></div></div>
+  <div class="card"><h3>Sync iPhone and laptop (GitHub)</h3>
+   <p class="small muted">${s.ghToken?`Linked to <b>${esc(s.ghOwner)}/${esc(s.ghRepo)}</b>. Last sync: ${s.lastSync?new Date(s.lastSync).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}):'never'}.`:'Not set up. Data stays only on this device.'}</p>
+   <div class="btns"><button class="btn ${s.ghToken?'':'pri'}" onclick="openSync()">${s.ghToken?'Change sync settings':'Set up sync'}</button>${s.ghToken?'<button class="btn pri" onclick="syncNow(true)">Sync now</button>':''}</div></div>
+  <div class="card"><h3>Ask / command (Claude)</h3><p class="small muted">${s.aiKey?'API key saved on this device.':'No API key on this device.'} The key is kept only on this device and is never put in the app files.</p>
+   <div class="btns"><button class="btn" onclick="openAI()">${s.aiKey?'Change key / model':'Add API key'}</button></div></div>
+  <div class="card"><h3>This device</h3><p class="small">Entries are signed as <b>${esc(s.user)}</b>.</p>
+   <div class="btns"><button class="btn" onclick="SET.user='';store(SKEY,SET);route()">Change name</button><button class="btn red" onclick="resetAll()">Remove all data from this device</button></div>
+   <p class="small muted">${DB.cash.length} cash entries · ${DB.work.length} work entries · ${DB.parties.length} parties · ${DB.deals.length} land deals</p></div>`;
+}
+function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function downloadBackup(){dl(`shreeji-data-${today()}.json`,JSON.stringify(DB),'application/json')}
+function restoreFile(f){f.text().then(t=>{const d=norm(JSON.parse(t));if(d.app!=='shreeji-finance')throw new Error('Not a Shreeji Finance file');
+  const how=confirm('OK = MERGE with what is on this device (keeps the newest version of every entry).\nCancel = REPLACE everything on this device with the file.');
+  snapshot(how?'Merged a backup file':'Replaced data from a backup file');DB=how?merge(DB,d):d;save();toast(how?'Merged':'Replaced');route()}).catch(e=>toast(e.message))}
+function resetAll(){if(!confirm('Remove ALL data from this device? (Download a backup first.)'))return;if(prompt('Type DELETE to confirm')!=='DELETE')return;localStorage.removeItem(KEY);localStorage.removeItem(UNDO);DB=null;route()}
+const csvq=x=>{x=x==null?'':String(x);return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x};
+const csv=rows=>'﻿'+rows.map(r=>r.map(csvq).join(',')).join('\r\n');
+function csvCash(){const rows=[['Date','Book','Type','Amount','Party','Category','Description','Voucher','Ledger','Page','Mode','Reference','Notes','Flag','Entered by']];DB.cash.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(c=>rows.push([c.date,ACC[c.account],c.dir==='in'?'Received':'Paid',c.amount,pName(c.partyId),c.category,c.desc,c.voucher,c.ledger,c.page,c.mode,c.ref,c.notes,c.flag,c.by]));dl('cash-book.csv',csv(rows),'text/csv')}
+function csvWork(){const rows=[['Date','Vendor','Work','Hours','Machine','Amount','Slip','Ledger','Page','Notes','Flag','Entered by']];DB.work.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(w=>rows.push([w.date,pName(w.partyId),w.desc,w.hours,w.machine,w.amount,w.voucher,w.ledger,w.page,w.notes,w.flag,w.by]));dl('work-on-credit.csv',csv(rows),'text/csv')}
+function csvDues(){const rows=[['Vendor','Work total','Paid','Balance (to pay +, advance -)','Lines without amount']];vendors().forEach(p=>{const t=partyTotals(p.id);rows.push([p.name,t.workAmt,t.paid,t.bal,t.missing])});dl('vendor-dues.csv',csv(rows),'text/csv')}
+function openAI(){
+  const m=modal(`<h3>Claude API key</h3><p class="small muted">Create a key at console.anthropic.com → API keys. It is saved only on this device. Each command costs a small amount on your Anthropic account.</p>
+   ${fld('f_key','API key',SET.aiKey,'password','placeholder="sk-ant-…" autocomplete="off"')}${fld('f_model','Model',SET.aiModel||'claude-sonnet-5-5')}
+   <div class="btns"><button class="btn pri" id="ok">Save</button><button class="btn" id="cancel">Cancel</button>${SET.aiKey?'<span class="sp"></span><button class="btn red" id="rm">Remove key</button>':''}</div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>{SET.aiKey=v(m,'f_key');SET.aiModel=v(m,'f_model')||'claude-sonnet-5-5';store(SKEY,SET);m.remove();route()};
+  if(SET.aiKey)m.querySelector('#rm').onclick=()=>{delete SET.aiKey;store(SKEY,SET);m.remove();route()};
+}
+
+/* ================= GitHub sync ================= */
+function openSync(first){
+  const m=modal(`<h3>GitHub sync</h3><p class="small muted">Use a <b>private</b> repository just for data (for example <code>shreeji-data</code>), separate from the app's public repo. Create a fine-grained token with access only to that repo and "Contents: Read and write".</p>
+   ${fld('f_o','GitHub username',SET.ghOwner)}${fld('f_r','Private data repo name',SET.ghRepo||'shreeji-data')}${fld('f_t','Token',SET.ghToken,'password','placeholder="github_pat_…" autocomplete="off"')}
+   <div class="btns"><button class="btn pri" id="ok">${first?'Load data':'Save and sync'}</button><button class="btn" id="cancel">Cancel</button>${SET.ghToken?'<span class="sp"></span><button class="btn red" id="rm">Turn off sync</button>':''}</div>`);
+  m.querySelector('#cancel').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=async()=>{SET.ghOwner=v(m,'f_o');SET.ghRepo=v(m,'f_r');SET.ghToken=v(m,'f_t');store(SKEY,SET);m.remove();
+    if(first&&!DB){DB=emptyDB()}await syncNow(true);route()};
+  if(SET.ghToken)m.querySelector('#rm').onclick=()=>{['ghOwner','ghRepo','ghToken','lastSync'].forEach(k=>delete SET[k]);store(SKEY,SET);m.remove();pill();route()};
+}
+const b64e=s=>btoa(unescape(encodeURIComponent(s)));
+const b64d=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
+function merge(a,b){
+  const out=emptyDB();const del={...a.deleted};Object.entries(b.deleted||{}).forEach(([k,t])=>{if(!del[k]||t>del[k])del[k]=t});out.deleted=del;
+  TABLES.forEach(t=>{const map=new Map();[...(a[t]||[]),...(b[t]||[])].forEach(r=>{const o=map.get(r.id);if(!o||(r.updatedAt||'')>(o.updatedAt||''))map.set(r.id,r)});
+    out[t]=[...map.values()].filter(r=>!(del[r.id]&&del[r.id]>=(r.updatedAt||'')))});
+  return out;
+}
+let syncTimer=null,syncing=false;
+function queueSync(){pill();if(!SET.ghToken)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(false),2500)}
+function pill(state){const p=$('#syncPill');if(!SET.ghToken){p.hidden=true;return}p.hidden=false;p.textContent=state||(SET.lastSync&&DB&&DB.savedAt<=SET.lastSync?'Synced':'Sync')}
+async function syncNow(loud){
+  if(!SET.ghToken||syncing)return;syncing=true;pill('Syncing…');
+  const url=`https://api.github.com/repos/${encodeURIComponent(SET.ghOwner)}/${encodeURIComponent(SET.ghRepo)}/contents/data.json`;
+  const H={Authorization:'Bearer '+SET.ghToken,Accept:'application/vnd.github+json'};
+  try{
+    for(let attempt=0;attempt<3;attempt++){
+      let remote=null,sha;
+      const g=await fetch(url+'?t='+Date.now(),{headers:H,cache:'no-store'});
+      if(g.status===200){const j=await g.json();sha=j.sha;remote=JSON.parse(b64d(j.content))}
+      else if(g.status!==404){const j=await g.json().catch(()=>({}));throw new Error(j.message||('GitHub error '+g.status))}
+      const merged=remote?merge(DB||emptyDB(),norm(remote)):norm(DB);
+      merged.savedAt=now();
+      const p=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({message:`Update by ${SET.user||'app'} ${new Date().toLocaleString('en-IN')}`,content:b64e(JSON.stringify(merged)),...(sha?{sha}:{})})});
+      if(p.status===409||p.status===422){continue}
+      if(!p.ok){const j=await p.json().catch(()=>({}));throw new Error(j.message||('GitHub error '+p.status))}
+      DB=merged;store(KEY,DB);SET.lastSync=now();store(SKEY,SET);pill('Synced');if(loud)toast('Synced with GitHub');
+      if(!document.querySelector('.modal'))route();
+      return;
+    }
+    throw new Error('Someone else was saving at the same time. Try again.');
+  }catch(e){pill('Sync failed');if(loud)toast('Sync: '+e.message)}
+  finally{syncing=false}
+}
+
+/* ================= start ================= */
+route();pill();
+if(SET.ghToken&&DB)syncNow(false);
+window.addEventListener('focus',()=>{if(SET.ghToken&&DB&&(!SET.lastSync||Date.now()-new Date(SET.lastSync)>60000))syncNow(false)});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
