@@ -116,7 +116,7 @@ code{background:var(--ink-soft);padding:1px 5px;border-radius:5px;font-size:13px
 </style>
 </head>
 <body>
-<header class="top"><h1 id="title">Shreeji Finance</h1><span class="sync" id="syncPill" onclick="syncNow(true)" hidden></span></header>
+<header class="top"><h1 id="title">Shreeji Finance</h1><span class="sync" id="syncPill" onclick="syncClick()" hidden></span></header>
 <main id="view"></main>
 <nav class="tabs" id="tabs"></nav>
 <script>
@@ -603,7 +603,7 @@ function openSync(first){
    ${fld('f_o','GitHub username',SET.ghOwner)}${fld('f_r','Private data repo name',SET.ghRepo||'shreeji-data')}${fld('f_t','Token',SET.ghToken,'password','placeholder="github_pat_…" autocomplete="off"')}
    <div class="btns"><button class="btn pri" id="ok">${first?'Load data':'Save and sync'}</button><button class="btn" id="cancel">Cancel</button>${SET.ghToken?'<span class="sp"></span><button class="btn red" id="rm">Turn off sync</button>':''}</div>`);
   m.querySelector('#cancel').onclick=()=>m.remove();
-  m.querySelector('#ok').onclick=async()=>{SET.ghOwner=v(m,'f_o');SET.ghRepo=v(m,'f_r');SET.ghToken=v(m,'f_t');store(SKEY,SET);m.remove();
+  m.querySelector('#ok').onclick=async()=>{SET.ghOwner=v(m,'f_o').replace(/^.*github\.com\//i,'').split('/')[0].trim();SET.ghRepo=v(m,'f_r').replace(/^.*github\.com\/[^/]+\//i,'').replace(/\.git$/,'').split('/')[0].trim();SET.ghToken=v(m,'f_t').replace(/\s+/g,'');delete SET.lastError;store(SKEY,SET);m.remove();
     if(first&&!DB){DB=emptyDB()}await syncNow(true);route()};
   if(SET.ghToken)m.querySelector('#rm').onclick=()=>{['ghOwner','ghRepo','ghToken','lastSync'].forEach(k=>delete SET[k]);store(SKEY,SET);m.remove();pill();route()};
 }
@@ -618,27 +618,56 @@ function merge(a,b){
 let syncTimer=null,syncing=false;
 function queueSync(){pill();if(!SET.ghToken)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(false),2500)}
 function pill(state){const p=$('#syncPill');if(!SET.ghToken){p.hidden=true;return}p.hidden=false;p.textContent=state||(SET.lastSync&&DB&&DB.savedAt<=SET.lastSync?'Synced':'Sync')}
+const ghErr=(status,msg)=>Object.assign(new Error(msg||('GitHub error '+status)),{status});
+function ghHelp(e){
+  const s=e.status,who=SET.ghOwner+'/'+SET.ghRepo;
+  if(s===401)return 'GitHub did not accept the token. It may be copied wrongly, have a space in it, or have expired. Make a new token and paste it again.';
+  if(s===403)return 'The token is not allowed to save into this repo. When making the token, choose "Only select repositories" → '+SET.ghRepo+', and set Contents to "Read and write".';
+  if(s===404)return 'GitHub cannot find "'+who+'" with this token. Check three things: (1) the username and repo name are spelled exactly; (2) the repo exists on that account; (3) the token was given access to that repo (Repository access → Only select repositories → '+SET.ghRepo+').';
+  if(s===409||s===422)return 'Someone else saved at the same moment. Tap Try again.';
+  if(!s)return 'Could not reach GitHub. Check the internet connection and try again.';
+  return '';
+}
+function syncClick(){if(SET.lastError)openSyncError();else syncNow(true)}
+function openSyncError(){
+  const e=SET.lastError||{};
+  const m=modal(`<h3>Sync did not work</h3><p><b>${esc(e.message||'Unknown problem')}</b>${e.status?` <span class="muted small">(code ${e.status})</span>`:''}</p>
+   <p class="small">${esc(e.help||'')}</p><p class="small muted">Syncing as <b>${esc(SET.ghOwner)}/${esc(SET.ghRepo)}</b>.</p>
+   <div class="btns"><button class="btn pri" id="again">Try again</button><button class="btn" id="chg">Change sync settings</button><button class="btn" id="cl">Close</button></div>`);
+  m.querySelector('#cl').onclick=()=>m.remove();
+  m.querySelector('#chg').onclick=()=>{m.remove();openSync()};
+  m.querySelector('#again').onclick=()=>{m.remove();syncNow(true)};
+}
 async function syncNow(loud){
   if(!SET.ghToken||syncing)return;syncing=true;pill('Syncing…');
-  const url=`https://api.github.com/repos/${encodeURIComponent(SET.ghOwner)}/${encodeURIComponent(SET.ghRepo)}/contents/data.json`;
+  const api=`https://api.github.com/repos/${encodeURIComponent(SET.ghOwner)}/${encodeURIComponent(SET.ghRepo)}`;
+  const url=api+'/contents/data.json';
   const H={Authorization:'Bearer '+SET.ghToken,Accept:'application/vnd.github+json'};
   try{
     for(let attempt=0;attempt<3;attempt++){
       let remote=null,sha;
       const g=await fetch(url+'?t='+Date.now(),{headers:H,cache:'no-store'});
       if(g.status===200){const j=await g.json();sha=j.sha;remote=JSON.parse(b64d(j.content))}
-      else if(g.status!==404){const j=await g.json().catch(()=>({}));throw new Error(j.message||('GitHub error '+g.status))}
+      else if(g.status===404){
+        const rr=await fetch(api,{headers:H,cache:'no-store'});
+        if(rr.status!==200){const j=await rr.json().catch(()=>({}));throw ghErr(rr.status===403?403:rr.status===401?401:404,j.message||'Repository not found')}
+        /* repo is fine, the file just doesn't exist yet: first upload */
+      }else{const j=await g.json().catch(()=>({}));throw ghErr(g.status,j.message)}
       const merged=remote?merge(DB||emptyDB(),norm(remote)):norm(DB);
       merged.savedAt=now();
       const p=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({message:`Update by ${SET.user||'app'} ${new Date().toLocaleString('en-IN')}`,content:b64e(JSON.stringify(merged)),...(sha?{sha}:{})})});
       if(p.status===409||p.status===422){continue}
-      if(!p.ok){const j=await p.json().catch(()=>({}));throw new Error(j.message||('GitHub error '+p.status))}
-      DB=merged;store(KEY,DB);SET.lastSync=now();store(SKEY,SET);pill('Synced');if(loud)toast('Synced with GitHub');
+      if(!p.ok){const j=await p.json().catch(()=>({}));throw ghErr(p.status,j.message)}
+      DB=merged;store(KEY,DB);SET.lastSync=now();delete SET.lastError;store(SKEY,SET);pill('Synced');if(loud)toast('Synced with GitHub');
       if(!document.querySelector('.modal'))route();
       return;
     }
-    throw new Error('Someone else was saving at the same time. Try again.');
-  }catch(e){pill('Sync failed');if(loud)toast('Sync: '+e.message)}
+    throw ghErr(409,'Someone else was saving at the same time');
+  }catch(e){
+    const err=e instanceof TypeError?ghErr(0,'No connection to GitHub'):e;
+    SET.lastError={message:err.message,status:err.status||0,help:ghHelp(err),at:now()};store(SKEY,SET);pill('Sync failed');
+    if(loud)openSyncError();
+  }
   finally{syncing=false}
 }
 
